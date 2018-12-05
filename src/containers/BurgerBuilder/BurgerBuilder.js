@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import Aux from '../../hoc/Aux';
 
+import Aux from '../../hoc/Aux';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 
 // const you want to use globally are often capitalized by convention
 const INGREDIENT_PRICES = {
@@ -29,7 +31,8 @@ class BurgerBuilder extends Component{
       meat: 0
     },
     totalPrice: 4,
-    purchasable: false
+    purchasable: false,
+    purchasing: false
   }
 
   // Argument is nodig om de ge-update ingredients te krijgen in add&removedIngredientHandlers
@@ -80,6 +83,11 @@ class BurgerBuilder extends Component{
     this.updatePurchaseState(updatedIngredients);
   }
 
+  // Note that the arrow syntax is necessary, otherwise the this refers to the wrong thing (ofzo)
+  purchaseHandler = () => {
+    this.setState({purchasing: true});
+  }
+
   render () {
     // const om 'less' button te disablen wanneer geen ingrediënten
     const disabledInfo = {
@@ -94,6 +102,10 @@ class BurgerBuilder extends Component{
 
     return (
       <Aux>
+        <Modal show={this.state.purchasing}>
+          <OrderSummary
+            ingredients={this.state.ingredients}/>
+        </Modal>
         <Burger 
           ingredients={this.state.ingredients}
         />
@@ -104,6 +116,7 @@ class BurgerBuilder extends Component{
           disabled={disabledInfo}
           price={this.state.totalPrice}
           purchasable={this.state.purchasable}
+          ordered={this.purchaseHandler}
         />
       </Aux>
     );

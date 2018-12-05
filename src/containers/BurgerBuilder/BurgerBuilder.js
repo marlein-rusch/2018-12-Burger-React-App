@@ -23,12 +23,28 @@ class BurgerBuilder extends Component{
 
   state = {
     ingredients: {
-      salad: 1,
+      salad: 0,
       bacon: 0,
       cheese: 0,
       meat: 0
     },
-    totalPrice: 4
+    totalPrice: 4,
+    purchasable: false
+  }
+
+  // Argument is nodig om de ge-update ingredients te krijgen in add&removedIngredientHandlers
+  updatePurchaseState (ingredients) {
+
+    // Object omzetten naar array
+    const sum = Object.keys(ingredients)
+      .map(igKey => {
+        return ingredients[igKey]
+      })
+      // 0 is starting number, dan optellen nummers (nl ingredient values)
+      .reduce((sum, el) => {
+        return sum + el
+      }, 0);
+    this.setState({purchasable: sum > 0}) // sum > 0 = true of false
   }
 
   addIngredientHandler = (type) => {
@@ -42,6 +58,8 @@ class BurgerBuilder extends Component{
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice + priceAddition;
     this.setState({totalPrice: newPrice, ingredients: updatedIngredients});
+    // update de ORDER button (of deze disabled is of niet)
+    this.updatePurchaseState(updatedIngredients);
   }
 
   removeIngredientHandler = (type) => {
@@ -58,7 +76,8 @@ class BurgerBuilder extends Component{
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice - priceDeduction;
     this.setState({totalPrice: newPrice, ingredients: updatedIngredients});
-
+    // update de ORDER button (of deze disabled is of niet)
+    this.updatePurchaseState(updatedIngredients);
   }
 
   render () {
@@ -79,10 +98,12 @@ class BurgerBuilder extends Component{
           ingredients={this.state.ingredients}
         />
         <BuildControls
+        // Here we bind properties (that we name ourselves) to the state
           ingredientAdded={this.addIngredientHandler}
           ingredientRemoved={this.removeIngredientHandler}
           disabled={disabledInfo}
           price={this.state.totalPrice}
+          purchasable={this.state.purchasable}
         />
       </Aux>
     );

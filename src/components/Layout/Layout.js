@@ -9,17 +9,26 @@ import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
 class Layout extends Component {
 
   state = {
-    showSideDrawer: true // true for testing
+    showSideDrawer: false // true for testing
   }
   // arrow function, so this keyword refers to the class at all time
   sideDrawerClosedHandler = () => {
     this.setState({showSideDrawer: false})
   }
 
+  sideDrawerToggleHandler = () => {
+    // NIET de line hieronder gebruiken: may lead to unexpected results due to the asynchronous nature of setState
+    // WRONG: this.setState({showSideDrawer: !this.state.showSideDrawer})
+    // Instead: use the function form.
+    this.setState((prevState) => {
+      return {showSideDrawer: !prevState.showSideDrawer};
+    })
+  }
+
   render () {
     return ( 
       <Aux>
-        <Toolbar/>
+        <Toolbar drawerToggleClicked={this.sideDrawerToggleHandler}/>
         <SideDrawer 
           open={this.state.showSideDrawer}
           closed={this.sideDrawerClosedHandler} 

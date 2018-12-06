@@ -9,10 +9,10 @@ In this project I have learned how to:
 - Plan the structure of a React App: layout, component structure and state management
 - Decide to implement stateful or stateless components and where to use state and props
 - Use different components and media-queries in CSS files to account for mobile and desktop version
-- Implement methods and pass these onto other components via props
+- Implement methods and use these in other components via props
 - Implement click handlers
 - Decide for a function syntax (i.e. arrow functions or not) according to a method's implementation
-- Use CSS Modules (i.e. scope the CSS files to specific JS files)
+- Use CSS Modules (i.e. scope the CSS files to specific Components)
 - Implement navigational components (like a Toolbar, and a SideDrawer for mobile)
 - Implement higher-order components
 - Implement images into the project

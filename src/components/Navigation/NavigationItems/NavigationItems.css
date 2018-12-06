@@ -1,10 +1,19 @@
+/* De standaard is hier dus mobile */
 .NavigationItems {
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
+  /* standaard lay-out is items naast elkaar, vandaar column */
+  flex-flow: column;
   /* vertically centered */
   align-items: center;
   /* take the full height of the Toolbar */
   height: 100%;
+}
+
+@media (min-width: 500px){
+  .NavigationItems {
+    flex-flow: row;
+  }
 }

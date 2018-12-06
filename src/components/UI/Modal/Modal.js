@@ -9,8 +9,9 @@ class Modal extends Component {
   // Deze shouldComp zorgt ervoor dat de Modal, en dus de wrapped component 
   // .. 'OrderSummary' in de BurgerBuilder niet onnodig (wanneer niet visible) worden geupdate
   shouldComponentUpdate(nextProps, nextState) {
-    // return boolean
-    return nextProps.show !== this.props.show
+    // returns a boolean
+    // de children blabla is nodig voor de Spinner
+    return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
   }
 
   // l. 145, ter illustratie van waar we shouldComponentUpdate kunnen implementeren.

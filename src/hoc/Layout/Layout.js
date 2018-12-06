@@ -1,9 +1,11 @@
+// Layout is verplaatst naar hoc, omdat we eigenlijk de BurgerBuilder
+// simpelweg wrappen met de Layout Component.
 import React, { Component } from 'react';
 
-import Aux from '../../hoc/Aux';
+import Aux from '../Aux/Aux';
 import classes from './Layout.css';
-import Toolbar from '../Navigation/Toolbar/Toolbar';
-import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
+import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
 
 // l. 140. const turned into class to implement method and listen to closing and opening
 class Layout extends Component {

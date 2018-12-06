@@ -25,5 +25,5 @@ I have learned how to:
 - Create a Firebase Project
 - Create an Axios instance
 - Send a POST request to the firebase database
-- Retrieve data from the backend (the firebase database)
+- Retrieve data from the backend (the firebase database) and use it in the state
 - Use Interceptors

@@ -5,8 +5,10 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
-import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
+// lowercase cause we're not using it with JSX, but at the end at export
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import axios from '../../axios-orders';
 
 // const you want to use globally are often capitalized by convention
 const INGREDIENT_PRICES = {
@@ -26,16 +28,23 @@ class BurgerBuilder extends Component{
   // }
 
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingredients: null,
     totalPrice: 4,
     purchasable: false,
     purchasing: false,
-    loading: false
+    loading: false,
+    error: false
+  }
+
+  //l.175 retrieving data from the backend
+  componentDidMount(){
+    axios.get('https://react-marleins-burger.firebaseio.com/ingredients.json')
+      .then(response => {
+        this.setState({ingredients: response.data})
+      })
+      .catch(error => {
+        this.setState({error: true})
+      })
   }
 
   // Argument is nodig om de ge-update ingredients te krijgen in add&removedIngredientHandlers
@@ -137,16 +146,37 @@ class BurgerBuilder extends Component{
       disabledInfo[key] = disabledInfo[key] <= 0
     }
 
-    let orderSummary = 
+    let orderSummary = null;
+ 
+    // l.175. Spinner opzet zolang we ingredients van database nog niet hebben
+    let burger = this.state.error ? <p>Ingredients can't be loaded!</p>: <Spinner />
+    
+    if (this.state.ingredients) {
+      burger = (
+        <Aux>
+          <Burger ingredients={this.state.ingredients}/>
+          <BuildControls
+          // Here we bind properties (that we name ourselves) to the state
+            ingredientAdded={this.addIngredientHandler}
+            ingredientRemoved={this.removeIngredientHandler}
+            disabled={disabledInfo}
+            price={this.state.totalPrice}
+            purchasable={this.state.purchasable}
+            ordered={this.purchaseHandler}
+          />
+        </Aux>
+      );
+      orderSummary =
       <OrderSummary
         ingredients={this.state.ingredients}
         price={this.state.totalPrice.toFixed(2)}
         purchaseCancelled={this.purchaseCancelHandler}
         purchaseContinued={this.purchaseContinueHandler}
       />
+    }  
 
     if (this.state.loading) {
-      orderSummary = <Spinner />
+      orderSummary = <Spinner />;
     }
 
     return (
@@ -157,21 +187,12 @@ class BurgerBuilder extends Component{
           {/* shows either the spinner or the summary */}
           {orderSummary}
         </Modal>
-        <Burger 
-          ingredients={this.state.ingredients}
-        />
-        <BuildControls
-        // Here we bind properties (that we name ourselves) to the state
-          ingredientAdded={this.addIngredientHandler}
-          ingredientRemoved={this.removeIngredientHandler}
-          disabled={disabledInfo}
-          price={this.state.totalPrice}
-          purchasable={this.state.purchasable}
-          ordered={this.purchaseHandler}
-        />
+        {burger}
       </Aux>
     );
   }
 }
 
-export default BurgerBuilder;
+// l. 174 voor creatie reuasable hoc 'withErrorHandler'
+// We can wrap it around any component that uses axios to handle its errors
+export default withErrorHandler(BurgerBuilder, axios);

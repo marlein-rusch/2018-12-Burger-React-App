@@ -8,11 +8,6 @@
   box-sizing: border-box;
 }
 
-/* l.217. Dit zorgt ervoor dat elk input field op een nieuwe lijn komt */
-.Input {
-  display: block;
-}
-
 @media (min-width: 600px) {
   .ContactData {
     width: 500px;

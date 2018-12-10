@@ -106,36 +106,22 @@ class BurgerBuilder extends Component{
 
   purchaseContinueHandler = () => {
 
-    //l. 173
-    // this.setState({loading: true})
-    // //alert('You continue!');
-    // //l.172: .json is the appropriate endpoint syntax for firebase
-    // const order = {
-    //   ingredients: this.state.ingredients,
-    //   // In real-world set-up this would not be safe: you'd recalculate the price on the server
-    //   price: this.state.totalPrice,
-    //   customer: {
-    //     name: 'Marlein',
-    //     address: {
-    //       street: 'Teststraat 1',
-    //       zipCode: '12345',
-    //       country: 'The Netherlands'
-    //     },
-    //     email: 'test@test.com'
-    //   },
-    //   deliveryMethod: 'fastest'
-    // }
-    // // second argument 'order' is the data that gets sent
-    // axios.post('/orders.json', order)
-    // // l. 173 purchasing: false zorgt ervoor dat de modal closes
-    //   .then(response => {
-    //     this.setState({loading: false, purchasing: false});
-    //   })
-    //   .catch(error => {
-    //     this.setState({loading: false, purchasing: false})
-    //   });
-    this.props.history.push('/checkout')
+
+    const queryParams = [];
+
+    for(let i in this.state.ingredients) {
+      // l.216: encodeURIComponent = embedded in Javascript.
+      // Hier niet echt nodig omdat we non-critical elements (gewoon de ingredientnamen en aantallen) hebben, maar is good practice.
+      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
     }
+    queryParams.push('price=' + this.state.totalPrice); 
+    const queryString = queryParams.join('&')
+
+    this.props.history.push({
+      pathname: '/checkout',
+      search: '?' + queryString
+    })
+  }
 
   render () {
     // const om 'less' button te disablen wanneer geen ingrediënten

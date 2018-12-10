@@ -16,7 +16,7 @@ class App extends Component {
           <Switch>
             {/* Je kunt Switch gebruiken en dan checkout bovenaan hebben staan,
             OF 'exact' toevoegen aan path='/' */}
-            <Route path="/checkout/" component={Checkout} />
+            <Route path="/checkout" component={Checkout} />
             <Route path="/" component={BurgerBuilder} />
           </Switch>
         </Layout>

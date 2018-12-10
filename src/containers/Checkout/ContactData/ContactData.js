@@ -65,16 +65,26 @@ class ContactData extends Component {
   }
 
   orderHandler = (event) => {
-    event.preventDefault(); // prevent reloading the page
-    console.log('this.props.ingr', this.props.ingredients)
+    // Avoid sending request to reload the page
+    event.preventDefault();
 
+    // l. 232. We can take the values from the state because it's constantly
+    // .. updated with two-way binding.
     this.setState({loading: true})
-    //alert('You continue!');
+   
+    // l. 232. Transformation of state to get only certain values.
+    const formData = {}
+    for (let formElementIdentifier in this.state.orderForm) {
+      // simply set key-value pairs (e.g. country = Albania), Albania being value that user enters.
+      formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
+    }
+
     //l.172: .json is the appropriate endpoint syntax for firebase
     const order = {
       ingredients: this.props.ingredients,
       // In real-world set-up this would not be safe: you'd recalculate the price on the server
-      price: this.props.price
+      price: this.props.price,
+      orderData: formData
     }
     // second argument 'order' is the data that gets sent
     axios.post('/orders.json', order)
@@ -90,6 +100,30 @@ class ContactData extends Component {
       });
   }
 
+  // l.231 Handling User Input. 
+
+  // Namelijk: als je typt, dan wordt dit in de input fields gevisualiseerd
+  inputChangedHandler = (event, inputIdentifier) => {
+    // l.231 Inmutably updating any effective form elements.
+    // We need 2x the spread operator, to ensure
+    // .. an actual deep copy of the nested objects.
+    const updatedOrderForm = {
+      ...this.state.orderForm
+    };
+    // l. 231. Als je de Elemenconfig zou willlen gebruiken, dus 
+    // .. nog een level dieper, moet je nog een keer spreaden
+    const updatedFormElement = {
+      ...updatedOrderForm[inputIdentifier]
+    };
+    // Nested value aanpassen..
+    updatedFormElement.value = event.target.value
+    // .. met de aangepaste nested value het hele object aanpassen..
+    updatedOrderForm[inputIdentifier] = updatedFormElement
+    // .. en dan de state setten met het gehele object
+    this.setState({orderForm: updatedOrderForm})
+  }
+
+
   render() {
     const formElementsArray = [];
     for (let key in this.state.orderForm){
@@ -100,18 +134,21 @@ class ContactData extends Component {
     }
 
     let form = (
-      <form>
+      // l. 232: onsubmit.
+      <form onSubmit={this.orderHandler}>
         {formElementsArray.map(formElement => (
           <Input
             key={formElement.id} 
             elementType={formElement.config.elementType}
             elementConfig={formElement.config.elementConfig}
             value={formElement.config.value}
+            // L.231. Veranderd van changed={this.inputChangedHandler}
+            // .. naar een arrow syntax, zodat we een argument kunnen meegeven.
+            changed={(event) => this.inputChangedHandler(event, formElement.id)}
           />
         ))}
         <Button 
           btnType="Success"
-          clicked={this.orderHandler}
         >ORDER</Button>        
       </form>
     );

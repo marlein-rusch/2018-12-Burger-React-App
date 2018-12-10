@@ -12,6 +12,7 @@ I have learned how to:
 - Use different components and media-queries in CSS files to account for mobile and desktop version
 - Implement methods and use these in other components via props
 - Implement click handlers
+- Use JSX
 - Decide for a function syntax (i.e. arrow functions or not) according to a method's implementation
 - Use CSS Modules (i.e. scope the CSS files to specific Components)
 - Implement navigational components (like a Toolbar, and a SideDrawer for mobile)
@@ -27,3 +28,14 @@ I have learned how to:
 - Send a POST request to the firebase database
 - Retrieve data from the backend (the firebase database) and use it in the state
 - Use Interceptors
+
+### Section 12
+I have learned how to:
+
+- Set up Routing & Routes with the react-router-dom package
+- Implement components from react-router-dom such as:
+  - BrowserRouter, Route, Link, NavLink, withRouter
+- Inject the special History, Location and Match properties with the withRouter component
+- Use methods on the history prop (such as .push, .goBack(), .replace('/'))
+- Pass on and extract data from and to the URL via QueryParams, URLSearchParams and encodeURIComponent.
+

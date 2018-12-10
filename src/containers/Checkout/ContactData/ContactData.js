@@ -16,7 +16,12 @@ class ContactData extends Component {
           type: 'text',
           placeholder: 'Your Name'
         },
-          value: ''
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
       street: {
         elementType: 'input',
@@ -24,7 +29,12 @@ class ContactData extends Component {
           type: 'text',
           placeholder: 'Street'
         },
-        value: ''
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
       zipCode: {
         elementType: 'input',
@@ -32,7 +42,14 @@ class ContactData extends Component {
           type: 'text',
           placeholder: 'ZIP Code'
         },
-        value: ''
+        value: '',
+        validation: {
+          required: true,
+          minLength: 5,
+          maxLength: 5
+        },
+        valid: false,
+        touched: false
       },
       country: {
         elementType: 'input',
@@ -40,7 +57,12 @@ class ContactData extends Component {
           type: 'text',
           placeholder: 'Country'
         },
-        value: ''
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
       email: {
         elementType: 'input',
@@ -48,7 +70,12 @@ class ContactData extends Component {
           type: 'email',
           placeholder: 'Your E-mail'
         },
-        value: ''
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
       deliverymethod: {
         elementType: 'select',
@@ -100,8 +127,29 @@ class ContactData extends Component {
       });
   }
 
-  // l.231 Handling User Input. 
+  // l.233 Custom Form Validation (pretty cool)
+  checkValidity(value, rules) {
+    // l.234. Omdraaien logica: eerst isValid op true, en naar false zetten naargelang condities.
+    let isValid = true;
 
+    if (rules.required) {
+      // trim = remove whitespace at beginning and end
+      isValid = value.trim() !== '' && isValid;
+    }
+    // die &&isValid is een beetje een trick
+    // .. zodat all rules need to resolve to true
+    if (rules.minLength) {
+      isValid = value.length >= rules.minLength && isValid;
+    }
+
+    if (rules.minLength) {
+      isValid = value.length <= rules.maxLength && isValid;
+    }
+    return isValid;
+  }
+
+
+  // l.231 Handling User Input. 
   // Namelijk: als je typt, dan wordt dit in de input fields gevisualiseerd
   inputChangedHandler = (event, inputIdentifier) => {
     // l.231 Inmutably updating any effective form elements.
@@ -117,9 +165,13 @@ class ContactData extends Component {
     };
     // Nested value aanpassen..
     updatedFormElement.value = event.target.value
+    updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation) // l. 233
+      // (l.236)
+    updatedFormElement.touched = true
     // .. met de aangepaste nested value het hele object aanpassen..
     updatedOrderForm[inputIdentifier] = updatedFormElement
     // .. en dan de state setten met het gehele object
+    console.log('updatedform element', updatedFormElement)
     this.setState({orderForm: updatedOrderForm})
   }
 
@@ -142,6 +194,12 @@ class ContactData extends Component {
             elementType={formElement.config.elementType}
             elementConfig={formElement.config.elementConfig}
             value={formElement.config.value}
+            // l.235. Adding validation feedback. Invert false or true.
+            invalid={!formElement.config.valid}
+            // l. 235 will return false if validation property isn't set
+            shouldValidate={formElement.config.validation}
+            // l. 236
+            touched={formElement.config.touched}
             // L.231. Veranderd van changed={this.inputChangedHandler}
             // .. naar een arrow syntax, zodat we een argument kunnen meegeven.
             changed={(event) => this.inputChangedHandler(event, formElement.id)}

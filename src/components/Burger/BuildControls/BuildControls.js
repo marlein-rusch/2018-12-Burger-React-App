@@ -18,7 +18,7 @@ const buildControls = (props) => (
         key={ctrl.label}
         label={ctrl.label}
         //ingredientAdded is set up in BurgerBuilder
-        // You have access to the type because we're looping
+        // You have access to a single type because we're looping
         added={() => props.ingredientAdded(ctrl.type)}
         removed={() => props.ingredientRemoved(ctrl.type)}
         disabled={props.disabled[ctrl.type]}

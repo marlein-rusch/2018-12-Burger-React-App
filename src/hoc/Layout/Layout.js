@@ -1,5 +1,5 @@
-// Layout is verplaatst naar hoc, omdat we eigenlijk de BurgerBuilder
-// simpelweg wrappen met de Layout Component.
+// Layout is verplaatst naar de folder hoc, omdat we eigenlijk de BurgerBuilder
+// .. simpelweg wrappen met de Layout Component.
 import React, { Component } from 'react';
 
 import Aux from '../Aux/Aux';

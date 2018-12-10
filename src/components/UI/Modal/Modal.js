@@ -16,7 +16,7 @@ class Modal extends Component {
 
   // l. 145, ter illustratie van waar we shouldComponentUpdate kunnen implementeren.
   componentWillUpdate () {
-    console.log('[Modal] will update')
+    // console.log('[Modal] will update')
   }
 
   render(){

@@ -29,6 +29,7 @@ I have learned how to:
 - Retrieve data from the backend (the firebase database) and use it in the state
 - Use Interceptors
 
+
 ### Section 12
 I have learned how to:
 
@@ -38,4 +39,3 @@ I have learned how to:
 - Inject the special History, Location and Match properties with the withRouter component
 - Use methods on the history prop (such as .push, .goBack(), .replace('/'))
 - Pass on and extract data from and to the URL via QueryParams, URLSearchParams and encodeURIComponent.
-

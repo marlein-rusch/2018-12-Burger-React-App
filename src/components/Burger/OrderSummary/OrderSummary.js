@@ -8,7 +8,7 @@ class OrderSummary extends Component {
   
   // l. 145, ter illustratie van waar we shouldComponentUpdate kunnen implementeren.
   componentWillUpdate(){
-    console.log('[OrderSummary] WillUpdate')
+    // console.log('[OrderSummary] WillUpdate')
   }
 
   render() {

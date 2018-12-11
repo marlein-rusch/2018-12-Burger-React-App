@@ -22,3 +22,8 @@
 .Danger {
   color: #944317;
 }
+/* Disabled pseudo selector */
+.Button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}

@@ -85,9 +85,14 @@ class ContactData extends Component {
             {value: 'cheapest', displayValue: 'Cheapest'},          
           ]
         },
-        value: ''
+        value: 'fastest',
+        // L. 239. Dropdown had geen validation, maar nodig om error te voorkomen.
+        validation: {},
+        // L. 238 Dropdown heeft geen validity normaal, maar is nodig voor overall validity check.
+        valid: true
       },
     },
+    formIsValid: false,
     loading: false
   }
 
@@ -142,7 +147,7 @@ class ContactData extends Component {
       isValid = value.length >= rules.minLength && isValid;
     }
 
-    if (rules.minLength) {
+    if (rules.maxLength) {
       isValid = value.length <= rules.maxLength && isValid;
     }
     return isValid;
@@ -172,7 +177,15 @@ class ContactData extends Component {
     updatedOrderForm[inputIdentifier] = updatedFormElement
     // .. en dan de state setten met het gehele object
     console.log('updatedform element', updatedFormElement)
-    this.setState({orderForm: updatedOrderForm})
+    
+    // l. 238. Add overall form validity
+    let formIsValid = true;
+    for (let inputIdentifier in updatedOrderForm) {
+      formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
+    }
+    
+    
+    this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid})
   }
 
 
@@ -207,6 +220,7 @@ class ContactData extends Component {
         ))}
         <Button 
           btnType="Success"
+          disabled={!this.state.formIsValid}
         >ORDER</Button>        
       </form>
     );

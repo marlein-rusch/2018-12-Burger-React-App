@@ -4,8 +4,9 @@ This React app has been built as part of the online React Course **React 16 - Th
 
 Note that I have coded along with the instructions: it is a pure copy of the 'Burger Builder' project in session 8 of the course.
 
+*I have learned how to:*
+
 ### Section 8 
-I have learned how to:
 
 - Plan the structure of a React App: layout, component structure and state management
 - Decide to implement stateful or stateless components and where to use state and props
@@ -21,7 +22,6 @@ I have learned how to:
 - ETC.
 
 ### Section 10 
-I have learned how to:
 
 - Create a Firebase Project
 - Create an Axios instance
@@ -30,7 +30,6 @@ I have learned how to:
 - Use Interceptors
 
 ### Section 12
-I have learned how to:
 
 - Set up Routing & Routes with the react-router-dom package
 - Implement components from react-router-dom such as:
@@ -39,3 +38,9 @@ I have learned how to:
 - Use methods on the history prop (such as .push, .goBack(), .replace('/'))
 - Pass on and extract data from and to the URL via QueryParams, URLSearchParams and encodeURIComponent.
 
+### Section 14
+
+- Create a custom dynamic input component
+- Dynamically create inputs based on JS config
+- Handle user input, dropdown components, and form submission
+- Add form validation and form validation feedback to user

@@ -29,6 +29,7 @@ Note that I have coded along with the instructions: it is a pure copy of the 'Bu
 - Retrieve data from the backend (the firebase database) and use it in the state
 - Use Interceptors
 
+
 ### Section 12
 
 - Set up Routing & Routes with the react-router-dom package
@@ -44,3 +45,4 @@ Note that I have coded along with the instructions: it is a pure copy of the 'Bu
 - Dynamically create inputs based on JS config
 - Handle user input, dropdown components, and form submission
 - Add form validation and form validation feedback to user
+

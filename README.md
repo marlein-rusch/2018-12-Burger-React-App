@@ -31,6 +31,7 @@ Note that I have coded along with the instructions: it is a pure copy of the 'Bu
 
 ### Section 12 - Routing
 
+
 - Set up Routing & Routes with the react-router-dom package
 - Implement components from react-router-dom such as:
   - BrowserRouter, Route, Link, NavLink, withRouter

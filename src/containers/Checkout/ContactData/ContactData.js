@@ -1,5 +1,7 @@
 // l. 217
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+
 import Button from '../../../components/UI/Button/Button';
 import classes from './ContactData.css'
 import axios from '../../../axios-orders';
@@ -113,7 +115,7 @@ class ContactData extends Component {
 
     //l.172: .json is the appropriate endpoint syntax for firebase
     const order = {
-      ingredients: this.props.ingredients,
+      ingredients: this.props.ings,
       // In real-world set-up this would not be safe: you'd recalculate the price on the server
       price: this.props.price,
       orderData: formData
@@ -236,4 +238,12 @@ class ContactData extends Component {
   }
 }
 
-export default ContactData;
+// l.270. Adjusting checkout and contact data
+const mapStateToProps = state => {
+  return {
+    ings: state.ingredients,
+    price: state.totalPrice
+  }
+}
+
+export default connect(mapStateToProps)(ContactData);

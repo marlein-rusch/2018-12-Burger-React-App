@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Aux from '../../hoc/Aux/Aux';
 import Burger from '../../components/Burger/Burger';
@@ -9,14 +10,10 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 // lowercase cause we're not using it with JSX, but at the end at export
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
+import * as actionTypes from '../../store/actions';
 
 // const you want to use globally are often capitalized by convention
-const INGREDIENT_PRICES = {
-  salad: 0.5,
-  cheese: 0.4,
-  meat: 1.3,
-  bacon: 0.7
-}
+
 
 class BurgerBuilder extends Component{
   // Constructor syntax will also work instead of the state as used below
@@ -28,24 +25,23 @@ class BurgerBuilder extends Component{
   // }
 
   state = {
-    ingredients: null,
-    totalPrice: 4,
-    purchasable: false,
+    // l.269:  ingredients, totalPrice en purchasable gaan nu via Redux 
     purchasing: false,
     loading: false,
     error: false
   }
 
-  //l.175 retrieving data from the backend
-  componentDidMount(){
-    axios.get('https://react-marleins-burger.firebaseio.com/ingredients.json')
-      .then(response => {
-        this.setState({ingredients: response.data})
-      })
-      .catch(error => {
-        this.setState({error: true})
-      })
-  }
+  //l.175 retrieving data from the backend.
+  // l. 266 WE'LL DO THIS LATER AGAIN IN REDUX STYLE
+  // componentDidMount(){
+  //   axios.get('https://react-marleins-burger.firebaseio.com/ingredients.json')
+  //     .then(response => {
+  //       this.setState({ingredients: response.data})
+  //     })
+  //     .catch(error => {
+  //       this.setState({error: true})
+  //     })
+  // }
 
   // Argument is nodig om de ge-update ingredients te krijgen in add&removedIngredientHandlers
   updatePurchaseState (ingredients) {
@@ -59,40 +55,8 @@ class BurgerBuilder extends Component{
       .reduce((sum, el) => {
         return sum + el
       }, 0);
-    this.setState({purchasable: sum > 0}) // sum > 0 = true of false
-  }
-
-  addIngredientHandler = (type) => {
-    const oldCount = this.state.ingredients[type];
-    const updatedCount = oldCount + 1;
-    const updatedIngredients = {
-      ...this.state.ingredients
-    };
-      updatedIngredients[type] = updatedCount;
-    const priceAddition = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
-    const newPrice = oldPrice + priceAddition;
-    this.setState({totalPrice: newPrice, ingredients: updatedIngredients});
-    // update de ORDER button (of deze disabled is of niet)
-    this.updatePurchaseState(updatedIngredients);
-  }
-
-  removeIngredientHandler = (type) => {
-    const oldCount = this.state.ingredients[type];
-    if (oldCount <= 0){
-      return;
-    }
-    const updatedCount = oldCount - 1;
-    const updatedIngredients = {
-      ...this.state.ingredients
-    };
-      updatedIngredients[type] = updatedCount;
-    const priceDeduction = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
-    const newPrice = oldPrice - priceDeduction;
-    this.setState({totalPrice: newPrice, ingredients: updatedIngredients});
-    // update de ORDER button (of deze disabled is of niet)
-    this.updatePurchaseState(updatedIngredients);
+    return sum > 0 // sum > 0 = true of false
+      // this.setState({purchasable: sum > 0}) 
   }
 
   // Note that the arrow syntax is necessary, otherwise the this refers to the wrong thing (ofzo)
@@ -105,28 +69,14 @@ class BurgerBuilder extends Component{
   }
 
   purchaseContinueHandler = () => {
-
-
-    const queryParams = [];
-
-    for(let i in this.state.ingredients) {
-      // l.216: encodeURIComponent = embedded in Javascript.
-      // Hier niet echt nodig omdat we non-critical elements (gewoon de ingredientnamen en aantallen) hebben, maar is good practice.
-      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
-    }
-    queryParams.push('price=' + this.state.totalPrice); 
-    const queryString = queryParams.join('&')
-
-    this.props.history.push({
-      pathname: '/checkout',
-      search: '?' + queryString
-    })
+    // l. 270. Is nu veel korter door Redux. Geen query params meer.
+    this.props.history.push('/checkout');
   }
 
   render () {
     // const om 'less' button te disablen wanneer geen ingrediënten
     const disabledInfo = {
-      ...this.state.ingredients
+      ...this.props.ings
     };
 
     for (let key in disabledInfo) {
@@ -139,25 +89,26 @@ class BurgerBuilder extends Component{
     // l.175. Spinner opzet zolang we ingredients van database nog niet hebben
     let burger = this.state.error ? <p>Ingredients can't be loaded!</p>: <Spinner />
     
-    if (this.state.ingredients) {
+    if (this.props.ings) {
       burger = (
         <Aux>
-          <Burger ingredients={this.state.ingredients}/>
+          <Burger ingredients={this.props.ings}/>
           <BuildControls
           // Here we bind properties (that we name ourselves) to the state
-            ingredientAdded={this.addIngredientHandler}
-            ingredientRemoved={this.removeIngredientHandler}
+            ingredientAdded={this.props.onIngredientAdded}
+            ingredientRemoved={this.props.onIngredientRemoved}
             disabled={disabledInfo}
-            price={this.state.totalPrice}
-            purchasable={this.state.purchasable}
+            price={this.props.price}
+            // l. 269. Method aangepast to enable/disable order button
+            purchasable={this.updatePurchaseState(this.props.ings)}
             ordered={this.purchaseHandler}
           />
         </Aux>
       );
       orderSummary =
       <OrderSummary
-        ingredients={this.state.ingredients}
-        price={this.state.totalPrice.toFixed(2)}
+        ingredients={this.props.ings}
+        price={this.props.price.toFixed(2)}
         purchaseCancelled={this.purchaseCancelHandler}
         purchaseContinued={this.purchaseContinueHandler}
       />
@@ -181,6 +132,21 @@ class BurgerBuilder extends Component{
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    ings: state.ingredients,
+    price: state.totalPrice
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onIngredientAdded: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
+    onIngredientRemoved: (ingName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingName})
+  }
+}
+
 // l. 174 voor creatie reuasable hoc 'withErrorHandler'
 // We can wrap it around any component that uses axios to handle its errors
-export default withErrorHandler(BurgerBuilder, axios);
+// l. 267. We now have 2 hocs. That's not a problem, the props are correctly passed on
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));

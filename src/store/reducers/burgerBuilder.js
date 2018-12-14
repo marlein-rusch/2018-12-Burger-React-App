@@ -40,7 +40,18 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_INGREDIENTS:
       return {
         ...state,
-        ingredients: action.ingredients,
+        // l. 296: Order aangepast, zodat samenvattings-lijstje
+        // .. ook de in de visuele burger wordt gereflect.
+        // Is niet zo heel herbruikbaar, maar onze CSS classes waren toch al insteld
+        // ..op deze specifieke ingredients, dus maakt niet zo uit
+        ingredients: {
+          salad: action.ingredients.salad,
+          bacon: action.ingredients.bacon,
+          cheese: action.ingredients.cheese,
+          meat: action.ingredients.meat
+        },
+        // l. 304. Total price reset
+        totalPrice: 4,
         // Indien de error naar true was gezet, weer naar false, zodat we weer stuff displayen
         error: false
       };

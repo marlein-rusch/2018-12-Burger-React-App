@@ -10,7 +10,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import axios from '../../axios-orders';
 // lowercase cause we're not using it with JSX, but at the end at export
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import * as burgerBuilderActions from '../../store/actions/index'; // index kan je omitten
+import * as actions from '../../store/actions/index'; // index kan je omitten
 
 // const you want to use globally are often capitalized by convention
 
@@ -66,6 +66,8 @@ class BurgerBuilder extends Component{
   }
 
   purchaseContinueHandler = () => {
+    // l. 303. Redirecting to homepage na purchase (best ingewikkeld)
+    this.props.onInitPurchase();
     // l. 270. Is nu veel korter door Redux. Geen query params meer.
     this.props.history.push('/checkout');
   }
@@ -132,9 +134,10 @@ class BurgerBuilder extends Component{
 
 const mapStateToProps = state => {
   return {
-    ings: state.ingredients,
-    price: state.totalPrice,
-    error: state.error
+    // l. 302. Combined reducers, dus nu .burgerBuilder toegevoegd (to reach that 'slice' of the combined reducer)
+    ings: state.burgerBuilder.ingredients,
+    price: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error
   }
 }
 
@@ -143,10 +146,11 @@ const mapDispatchToProps = dispatch => {
     // L 292. Opzet action creators. De originele line (hieronder) vervangen.
     // onIngredientAdded: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
     // Hier hebben we een argument (ingName). Soms is dat niet zo, nl als er geen payload is.
-    onIngredientAdded: (ingName) => dispatch(burgerBuilderActions.addIngredient(ingName)),
-    onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName)),
+    onIngredientAdded: (ingName) => dispatch(actions.addIngredient(ingName)),
+    onIngredientRemoved: (ingName) => dispatch(actions.removeIngredient(ingName)),
     // l. 295. Move axios request naar Redux.
-    onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
+    onInitIngredients: () => dispatch(actions.initIngredients()),
+    onInitPurchase: () => dispatch(actions.purchaseInit())
   }
 }
 

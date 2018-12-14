@@ -1,18 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter} from 'react-router-dom';
+// l. 293: Thunk, applyMiddleware, compose.
+import { createStore, applyMiddleware, compose  } from 'redux';
+import thunk from 'redux-thunk';
 
 import './index.css';
 import App from './App';
-import reducer from './store/reducer';
+import burgerBuilderReducer from './store/reducers/burgerBuilder';
+
+// l.293: Adding Middleware, nu moet je advanced set up gebruiken (1e of 2e hit zoekterm 'redux Devtools' via Google)
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  burgerBuilderReducer,
+  // l. 293: ipv die window.__REDUX(..) enhancer hier als tweede argument,
+  // Nu deze syntactische contructie om middleware toe te passen.
+  composeEnhancers(
+    applyMiddleware(thunk)
+  )
 )
+
 
 const app = (
   // l. 265. BrowserRouter should be wrapped within the Provider

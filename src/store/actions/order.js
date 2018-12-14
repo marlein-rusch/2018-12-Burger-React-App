@@ -61,3 +61,46 @@ export const purchaseInit = () => {
     type: actionTypes.PURCHASE_INIT
   }
 }
+// l. 305. Fetching (all) orders via Redux
+export const fetchOrdersSuccess = (orders) => {
+  return {
+    type: actionTypes.FETCH_ORDERS_SUCCESS,
+    orders: orders
+  }
+}
+
+export const fetchOrdersFail = (error) => {
+  return {
+    type: actionTypes.FETCH_ORDERS_FAIL,
+    error: error
+  }
+}
+
+export const fetchOrdersStart = () => {
+  return {
+    type: actionTypes.FETCH_ORDERS_START,
+  }
+}
+
+export const fetchOrders = () => {
+  return dispatch => {
+    // l. 305. Deze ..Start() dispatch is om de spinner te laten zien
+    dispatch(fetchOrdersStart())
+    axios.get('/orders.json')
+    // l.305. Deze transformation kan ook in de reducer, Max prefers in action creator
+    .then(res => {
+      const fetchedOrders = [];
+      for (let key in res.data) {
+        fetchedOrders.push(
+          {...res.data[key],
+          // key (de property key) is gewoon het nr gecreëerd door firebase,
+          id: key
+        });
+      }      
+      dispatch(fetchOrdersSuccess(fetchedOrders));
+    })
+    .catch(err => {
+      dispatch(fetchOrdersFail(err))
+    });
+  }
+};

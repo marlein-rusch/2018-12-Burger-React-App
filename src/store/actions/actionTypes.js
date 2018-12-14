@@ -12,3 +12,8 @@ export const PURCHASE_BURGER_SUCCESS = 'PURCHASE_BURGER_SUCCES';
 export const PURCHASE_BURGER_FAIL = 'PURCHASE_BURGER_FAIL';
 // l. 303. Redirect to homepage after purchase.
 export const PURCHASE_INIT = 'PURCHASE_INIT'
+// l. 305 Fetching orders with Redux
+
+export const FETCH_ORDERS_START = 'FETCH_ORDERS_START';
+export const FETCH_ORDERS_SUCCESS = 'FETCH_ORDERS_SUCCESS';
+export const FETCH_ORDERS_FAIL = 'FETCH_ORDERS_FAIL'

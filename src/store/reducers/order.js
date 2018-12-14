@@ -41,6 +41,24 @@ const reducer = (state = initialState, action) => {
         ...state, 
         loading: false
       }
+    // l. 305. Fetching orders in redux
+    case actionTypes.FETCH_ORDERS_START:
+      return {
+        ...state,
+        loading: true
+      }
+    case actionTypes.FETCH_ORDERS_SUCCESS:
+      return {
+        ...state,
+        orders: action.orders,
+        loading: false
+      }
+    case actionTypes.FETCH_ORDERS_FAIL:
+      return {
+        ...state,
+        // l. 305: even it it fails, the loading is done (so false)
+        loading: false
+      }
     default: 
       return state
   }

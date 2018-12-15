@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
+import { updateObject } from '../utility'
 
 const initialState = {
   // l. 294. null, omdat we nu fetchen.
@@ -67,3 +68,5 @@ const reducer = (state = initialState, action) => {
 }
 
 export default reducer;
+
+ 

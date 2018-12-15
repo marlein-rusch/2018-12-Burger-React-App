@@ -52,3 +52,7 @@ Note that I have coded along with the instructions: it is a pure copy of the 'Bu
 - Decide whether to use the local state or Redux state
 - Use mapStateToProps and mapDispatchToProps
 
+### Section 17 - Redux advanced
+- Handle async code with action creators
+- Apply middleware (thunk)
+- Refactor reducers

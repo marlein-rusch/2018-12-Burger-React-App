@@ -1,5 +1,6 @@
 // l. 299
 import * as actionTypes from '../actions/actionTypes';
+import { updateObject } from '../utility';
 
 const initialState = {
   orders: [],
@@ -7,6 +8,7 @@ const initialState = {
   purchased: false // redirect to homepage
 }
 
+// l. 307 Refactoring reducer: heb ik NIET toegepast!
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     // l. 303. Redirect to homepage when purchase finished
@@ -43,10 +45,13 @@ const reducer = (state = initialState, action) => {
       }
     // l. 305. Fetching orders in redux
     case actionTypes.FETCH_ORDERS_START:
-      return {
-        ...state,
-        loading: true
-      }
+      // l. 307. Refactoring reducer: niet gedaan BEHALVE hier ter vb
+      return updateObject(state, {loading: true })
+      // l. 307. Refactoring reducer, oude code:
+      // return {
+      //   ...state,
+      //   loading: true
+      // }
     case actionTypes.FETCH_ORDERS_SUCCESS:
       return {
         ...state,

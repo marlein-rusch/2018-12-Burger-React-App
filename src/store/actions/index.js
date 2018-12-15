@@ -12,3 +12,9 @@ export {
   purchaseInit,
   fetchOrders
 } from './order';
+
+// l. 315 Authentication
+
+export {
+  auth
+} from './auth';

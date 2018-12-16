@@ -11,6 +11,7 @@ import './index.css';
 import App from './App';
 import burgerBuilderReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
+import authReducer from './store/reducers/auth';
 
 // l.293: Adding Middleware, nu moet je advanced set up gebruiken (1e of 2e hit zoekterm 'redux Devtools' via Google)
 
@@ -19,7 +20,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 // l.302. Combine reducers.
 const rootReducer = combineReducers ({
   burgerBuilder: burgerBuilderReducer,
-  order: orderReducer
+  order: orderReducer,
+  auth: authReducer
 })
 
 const store = createStore(

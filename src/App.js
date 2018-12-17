@@ -6,6 +6,7 @@ import Checkout from './containers/Checkout/Checkout';
 import Orders from './containers/Orders/Orders';
 import { Route, Switch } from 'react-router-dom';
 import Auth from './containers/Auth/Auth';
+import Logout from './containers/Auth/Logout/Logout';
 
 
 class App extends Component {
@@ -19,9 +20,11 @@ class App extends Component {
             {/* Je kunt Switch gebruiken en dan checkout bovenaan hebben staan,
             OF 'exact' toevoegen aan path='/' */}
             <Route path="/checkout" component={Checkout} />
-            {/* Orders path toegevoegd in l. 219 */}
+            {/* l. 219: Orders path */}
             <Route path="/orders" component={Orders} />
             <Route path="/auth" component={Auth} />
+            {/* l.323: Adding a logout link */}
+            <Route path="/logout" component={Logout} />
             <Route path="/" component={BurgerBuilder} />
           </Switch>
         </Layout>

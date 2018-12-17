@@ -1,6 +1,7 @@
 // Layout is verplaatst naar de folder hoc, omdat we eigenlijk de BurgerBuilder
 // .. simpelweg wrappen met de Layout Component.
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Aux from '../Aux/Aux';
 import classes from './Layout.css';
@@ -30,8 +31,12 @@ class Layout extends Component {
   render () {
     return ( 
       <Aux>
-        <Toolbar drawerToggleClicked={this.sideDrawerToggleHandler}/>
+        <Toolbar 
+          isAuth={this.props.isAuthenticated}
+          drawerToggleClicked={this.sideDrawerToggleHandler}
+        />
         <SideDrawer 
+          isAuth={this.props.isAuthenticated}
           open={this.state.showSideDrawer}
           closed={this.sideDrawerClosedHandler} 
           />
@@ -43,4 +48,12 @@ class Layout extends Component {
   }
 }
 
-export default Layout;
+// l. 322. Updating the UI Depending on Auth State
+const mapStateToProps = state => {
+  return {
+    // l. 322 Returns boolean value
+    isAuthenticated: state.auth.token !== null
+  };
+};
+
+export default connect(mapStateToProps)(Layout);

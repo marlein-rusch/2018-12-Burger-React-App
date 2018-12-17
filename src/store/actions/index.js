@@ -13,8 +13,10 @@ export {
   fetchOrders
 } from './order';
 
-// l. 315 Authentication
+// l. 315, 323: Authentication
 
 export {
-  auth
+  auth,
+  logout
 } from './auth';
+

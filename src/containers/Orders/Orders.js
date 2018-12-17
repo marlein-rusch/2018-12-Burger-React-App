@@ -12,7 +12,9 @@ class Orders extends Component {
   // l.221. No way we go here without remounting, which is why we use DidMount (not DidUpdate)
   componentDidMount() {
     // l. 305. Axios code deleted (moved to actions, so Redux)
-    this.props.onFetchOrders();
+    // l. 321. Adding authentication: this.props.token als argument toegevoegd
+    this.props.onFetchOrders(this.props.token);
+
   }
   
   render() {
@@ -38,13 +40,16 @@ class Orders extends Component {
 const mapStateToProps = state => {
   return {
     orders: state.order.orders,
-    loading: state.order.loading
+    loading: state.order.loading,
+    // l. 321. Taken token from Redux store for authentication
+    token: state.auth.token
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onFetchOrders: () => dispatch(actions.fetchOrders())
+    // l. 321 token als argument toegevoegd voor Authentication
+    onFetchOrders: (token) => dispatch(actions.fetchOrders(token))
   };
 };
 

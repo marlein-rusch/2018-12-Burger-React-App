@@ -126,8 +126,8 @@ class ContactData extends Component {
     }
     // l. 297: AXIOS-code ge-cut naar order.js action file (voor Redux)
     // l. 298: Replaced by the following (we receive our dispatch actions via this.props)
-
-    this.props.onOrderBurger(order);
+    // l. 321. token argument toegevoegd
+    this.props.onOrderBurger(order, this.props.token);
   }
 
   // l.233 Custom Form Validation (pretty cool)
@@ -242,7 +242,8 @@ const mapStateToProps = state => {
     // l.302 De 'slices' (burg.B & order) namen zijn gedefinieerd in de root index.js file
     ings: state.burgerBuilder.ingredients,
     price: state.burgerBuilder.totalPrice,
-    loading: state.order.loading
+    loading: state.order.loading,
+    token: state.auth.token
   }
 }
 
@@ -250,7 +251,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData))
+    // l. 321. Auth: second argument 'token' toegevoegd
+    onOrderBurger: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token))
   };
 };
 

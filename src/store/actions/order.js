@@ -29,13 +29,14 @@ export const purchaseBurgerStart = () => {
 
 
 // l. 297 The action we dispatch from the container once we click that order-button
-export const purchaseBurger = (orderData) => {
+// l. 321 Authentication: added second argument (token)
+export const purchaseBurger = (orderData, token) => {
   // return a function where we get the dispatch function (this is thunk doing its shit)
   return dispatch => {
     // l.300. De DISPATCH is nodig to dispatch to the Redux store
     dispatch(purchaseBurgerStart());
     // second argument 'orderData' is the data that gets sent
-    axios.post('/orders.json', orderData)
+    axios.post('/orders.json?auth=' + token, orderData)
     // l. 173 purchasing: false zorgt ervoor dat de modal closes
     .then(response => {
       console.log('Actions --> [order.js], response.data: ', response.data)
@@ -82,11 +83,13 @@ export const fetchOrdersStart = () => {
   }
 }
 
-export const fetchOrders = () => {
+// l. 321 token argument toegevoegd voor authentication
+export const fetchOrders = (token) => {
   return dispatch => {
     // l. 305. Deze ..Start() dispatch is om de spinner te laten zien
     dispatch(fetchOrdersStart())
-    axios.get('/orders.json')
+    // l. 321 Authentication: add token as query param to have access to orderlist
+    axios.get('/orders.json?auth=' + token)
     // l.305. Deze transformation kan ook in de reducer, Max prefers in action creator
     .then(res => {
       const fetchedOrders = [];

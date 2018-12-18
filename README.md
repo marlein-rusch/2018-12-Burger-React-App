@@ -67,4 +67,7 @@ Note that I have coded along with the instructions: it is a pure copy of the 'Bu
 - Use Local Storage to keep user logged in
 
 ### Section 20 - Testing
--
+- Think about tests: what to test and what not to test with React and Redux
+- Use the test Runner **Jest** (e.g. applying the *expect()* method)
+- Use the test utility **Enzyme** to simulate mounting react app components and dig into the DOM (e.g. applying the *.find()* and *.contains()* method)
+- Do some simple unit testing with methods like *.toEqual* and *.toHaveLength*

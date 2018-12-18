@@ -51,7 +51,7 @@ describe('<NavigationItems />', () => {
 
   // l. 348
   // 'contains' takes a node
-  it('should render 3 <NavigationItem /> elements if authenticated, tested with  CONTAINS', () => {
+  it('should have an exact logout button', () => {
     wrapper.setProps({isAuthenticated: true});
     // Look at code in NavigationItem.js: looks the same
     expect(wrapper.contains(<NavigationItem link="/logout">Logout</NavigationItem>)).toEqual(true);

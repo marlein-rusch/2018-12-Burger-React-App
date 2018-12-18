@@ -14,8 +14,8 @@ import * as actions from '../../store/actions/index'; // index kan je omitten
 
 // const you want to use globally are often capitalized by convention
 
-
-class BurgerBuilder extends Component{
+// l. 350 'export' added for testing
+export class BurgerBuilder extends Component{
   // Constructor syntax will also work instead of the state as used below
   // constructor(props) {
   //   super(props);

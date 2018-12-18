@@ -65,3 +65,6 @@ Note that I have coded along with the instructions: it is a pure copy of the 'Bu
 - Redirect the user when he visits unauthorized pages (guarded routes)
 - Redirect the user to a log-in form after creating a burger according to log-in (authorization) status
 - Use Local Storage to keep user logged in
+
+### Section 20 - Testing
+-

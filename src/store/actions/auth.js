@@ -25,6 +25,10 @@ export const authFail = (error) => {
 };
 
 export const logout = () => {
+  // l. 326 Local Storage
+  localStorage.removeItem('token');
+  localStorage.removeItem('expirationDate');
+  localStorage.removeItem('userId');
   return {
     type: actionTypes.AUTH_LOGOUT
   }
@@ -62,6 +66,15 @@ export const auth = (email, password, isSignup) => {
       axios.post(url, authData)
         .then(response => {
           console.log(response);
+          // l. 326 * 1000 because Date works in milliseconds
+          const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000)
+          // l. 326. Localstorage is built into javascript.
+          // l. 326 Set item is something we can call on localStorage.
+          // l. 326 Second argument is the actual token
+          // l. 326 Chrome Devtools -> Application tab -> Local Storage
+          localStorage.setItem('token', response.data.idToken);
+          localStorage.setItem('expirationDate', expirationDate);
+          localStorage.setItem('userId', response.data.localId);
           dispatch(authSuccess(response.data.idToken, response.data.localId))
           dispatch(checkAuthTimeout(response.data.expiresIn))
         })
@@ -82,3 +95,29 @@ export const setAuthRedirectPath = (path) => {
     path: path
   }
 }
+
+// l. 326. Local Storage
+// Utility action creator which dispatches a couple of other 
+// .. actions depending on our curren state. It's not async.
+
+export const authCheckState = () => {
+  return dispatch => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // Shouldn't be required but just to be sure
+      // Als er geen token in storage zit hoor je niet ingelogd te zijn
+      dispatch(logout())
+    } else {
+      // We need a Date object, not a string 
+      const expirationDate = new Date(localStorage.getItem('expirationDate'))
+      if (expirationDate <= new Date()) {
+        dispatch(logout());
+      } else {
+        const userId = localStorage.getItem('userId');
+        dispatch(authSuccess(token, userId));
+        // getTime gets us the time in milliseconds
+        dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()) / 1000))
+      }
+    }
+  };
+};

@@ -39,7 +39,7 @@ export const purchaseBurger = (orderData, token) => {
     axios.post('/orders.json?auth=' + token, orderData)
     // l. 173 purchasing: false zorgt ervoor dat de modal closes
     .then(response => {
-      console.log('Actions --> [order.js], response.data: ', response.data)
+      // console.log('Actions --> [order.js], response.data: ', response.data)
         /*
         // OLD CODE toen het nog in ContactData orderHandler zat
         this.setState({loading: false }); 

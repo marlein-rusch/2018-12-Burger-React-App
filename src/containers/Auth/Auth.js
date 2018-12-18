@@ -1,7 +1,8 @@
 // l. 314
 
 import React, { Component } from 'react';
-import {connect } from 'react-redux';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
@@ -45,6 +46,15 @@ class Auth extends Component {
       }
     },
     isSignup: true
+  }
+  // l. 325 Redirecting the User to the Checkout page 
+  // l. 325 = moeilijk!!  En niet echt gelukt lijkt het.
+  componentDidMount(){
+    // l. 325: Make sure that we set the path if we reach this page whilst not building a burger.
+    // Tweede check omdat it means we try to redirect to checkout even though we're not building a burger
+    if (!this.props.buildingBurger && this.props.authRedirectPath !== '/' ) {
+      this.props.onSetAuthRedirectPath();
+    }
   }
 
   checkValidity(value, rules) {
@@ -136,8 +146,16 @@ class Auth extends Component {
       )
     }
 
+    // l. 324: Forwarding unauthenticated users
+    let authRedirect = null;
+    if (this.props.isAuthenticated) {
+      // l. 325 Redirecting the user to the checkout page (moeilijk)
+      authRedirect = <Redirect to={this.props.authRedirectPath}/>
+    }
+
     return(
       <div className={classes.Auth}>
+        {authRedirect}
         {errorMessage}
         <form onSubmit={this.submitHandler}>
           {form}
@@ -154,13 +172,20 @@ class Auth extends Component {
 const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
-    error: state.auth.error
+    error: state.auth.error,
+    isAuthenticated: state.auth.token !== null,
+    buildingBurger: state.burgerBuilder.building, // l. 325 (moeilijke les)
+    authRedirectPath: state.auth.authRedirectPath // l. 325 (moeilijke les)
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup))
+    onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup)),
+    // l. 325 (moeilijke les) (Redirecting the user to the checkout page)
+    // l.325 Wanneer deze action in deze component wordt gedispatched, wil je het pad altijd naar 
+    // .. de vorm '/' resetten, vandaar dat we het hier harcoden.
+    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
   }
 }
 

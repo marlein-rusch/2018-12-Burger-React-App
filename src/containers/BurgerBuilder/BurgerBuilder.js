@@ -57,8 +57,15 @@ class BurgerBuilder extends Component{
   }
 
   // Note that the arrow syntax is necessary, otherwise the this refers to the wrong thing (ofzo)
+  // l.324. Forwarding unauthenticated users (PurchaseHandler uitgebreid)
   purchaseHandler = () => {
+    if (this.props.isAuth){
     this.setState({purchasing: true});
+    } else {
+      // l. 325. MAAR WERKT NIET
+      this.props.onSetAuthRedirectPath('/checkout');
+      this.props.history.push('/auth');
+    }
   }
 
   purchaseCancelHandler = () => {
@@ -94,7 +101,7 @@ class BurgerBuilder extends Component{
         <Aux>
           <Burger ingredients={this.props.ings}/>
           <BuildControls
-          // Here we bind properties (that we name ourselves) to the state
+            // Here we bind properties (that we name ourselves) to the state
             ingredientAdded={this.props.onIngredientAdded}
             ingredientRemoved={this.props.onIngredientRemoved}
             disabled={disabledInfo}
@@ -102,6 +109,8 @@ class BurgerBuilder extends Component{
             // l. 269. Method aangepast to enable/disable order button
             purchasable={this.updatePurchaseState(this.props.ings)}
             ordered={this.purchaseHandler}
+            // l. 324 Forwarding unauthenticated users
+            isAuth={this.props.isAuthenticated}
           />
         </Aux>
       );
@@ -137,7 +146,9 @@ const mapStateToProps = state => {
     // l. 302. Combined reducers, dus nu .burgerBuilder toegevoegd (to reach that 'slice' of the combined reducer)
     ings: state.burgerBuilder.ingredients,
     price: state.burgerBuilder.totalPrice,
-    error: state.burgerBuilder.error
+    error: state.burgerBuilder.error,
+    // l. 324 Forwarding unauthenticated users
+    isAuthenticated: state.auth.token !== null
   }
 }
 
@@ -150,7 +161,9 @@ const mapDispatchToProps = dispatch => {
     onIngredientRemoved: (ingName) => dispatch(actions.removeIngredient(ingName)),
     // l. 295. Move axios request naar Redux.
     onInitIngredients: () => dispatch(actions.initIngredients()),
-    onInitPurchase: () => dispatch(actions.purchaseInit())
+    onInitPurchase: () => dispatch(actions.purchaseInit()),
+    // l. 325 Redirecting the user to the Checkout page. MAAR WERKT NIET
+    onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
   }
 }
 

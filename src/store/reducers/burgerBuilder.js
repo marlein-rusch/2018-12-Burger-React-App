@@ -6,7 +6,8 @@ const initialState = {
   // null is ook nodig in een ander file om te spinner te laten zien geloof ik
   ingredients: null, 
   totalPrice: 4,
-  error: false // toegevoegd in l.294
+  error: false, // l.294,
+  building: false // l. 325. Redirecting the user to Checkout page (with selected burger ingr.)
 }
 
 const INGREDIENT_PRICES = {
@@ -26,7 +27,8 @@ const reducer = (state = initialState, action) => {
           ...state.ingredients,
           [action.ingredientName]: state.ingredients[action.ingredientName] + 1
         },
-        totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
+        totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+        building: true // l. 325 (burger ingr bewaren voor un-auth users)
       }
     case actionTypes.REMOVE_INGREDIENT:
       return {
@@ -35,7 +37,8 @@ const reducer = (state = initialState, action) => {
           ...state.ingredients,
           [action.ingredientName]: state.ingredients[action.ingredientName] - 1
         },
-        totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
+        totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName], 
+        building: true // l. 325 (burger ingr bewaren voor un-auth users)
       }
     // l. 295
     case actionTypes.SET_INGREDIENTS:
@@ -54,7 +57,8 @@ const reducer = (state = initialState, action) => {
         // l. 304. Total price reset
         totalPrice: 4,
         // Indien de error naar true was gezet, weer naar false, zodat we weer stuff displayen
-        error: false
+        error: false,
+        building: false // l. 325 (burger ingr weggooien when reloading page)
       };
     
     case actionTypes.FETCH_INGREDIENTS_FAILED:

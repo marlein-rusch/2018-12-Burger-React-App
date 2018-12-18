@@ -7,6 +7,8 @@ import classes from './ContactData.css'
 import axios from '../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import * as actions from '../../../store/actions/index';
 
 class ContactData extends Component {
   // l.228 (omzetting naar dit object) 
@@ -87,6 +89,8 @@ class ContactData extends Component {
             {value: 'cheapest', displayValue: 'Cheapest'},          
           ]
         },
+        // l.302. Je kan geen lege initiële value hebben, 
+        // want hij pakt pas de dropdown menu value als je iets verandert. Dus standaard 'fastest'
         value: 'fastest',
         // L. 239. Dropdown had geen validation, maar nodig om error te voorkomen.
         validation: {},
@@ -95,7 +99,7 @@ class ContactData extends Component {
       },
     },
     formIsValid: false,
-    loading: false
+    // loading: false // l.300 Deleted because of Redux.
   }
 
   orderHandler = (event) => {
@@ -104,7 +108,7 @@ class ContactData extends Component {
 
     // l. 232. We can take the values from the state because it's constantly
     // .. updated with two-way binding.
-    this.setState({loading: true})
+    // this.setState({loading: true}) // OLD. (delete for Redux, l. 298)
    
     // l. 232. Transformation of state to get only certain values.
     const formData = {}
@@ -118,20 +122,14 @@ class ContactData extends Component {
       ingredients: this.props.ings,
       // In real-world set-up this would not be safe: you'd recalculate the price on the server
       price: this.props.price,
-      orderData: formData
+      orderData: formData,
+      // l. 330 Displaying user specific orders
+      userId: this.props.userId
     }
-    // second argument 'order' is the data that gets sent
-    axios.post('/orders.json', order)
-    // l. 173 purchasing: false zorgt ervoor dat de modal closes
-      .then(response => {
-        this.setState({loading: false });
-        // l.178. History object beschikbaar doordat we props via de render method hebben
-        // .. meegegeven onderaan in de checkout component. 
-        this.props.history.push('/')
-      })
-      .catch(error => {
-        this.setState({loading: false })
-      });
+    // l. 297: AXIOS-code ge-cut naar order.js action file (voor Redux)
+    // l. 298: Replaced by the following (we receive our dispatch actions via this.props)
+    // l. 321. token argument toegevoegd
+    this.props.onOrderBurger(order, this.props.token);
   }
 
   // l.233 Custom Form Validation (pretty cool)
@@ -178,7 +176,7 @@ class ContactData extends Component {
     // .. met de aangepaste nested value het hele object aanpassen..
     updatedOrderForm[inputIdentifier] = updatedFormElement
     // .. en dan de state setten met het gehele object
-    console.log('updatedform element', updatedFormElement)
+    // console.log('updatedform element', updatedFormElement)
     
     // l. 238. Add overall form validity
     let formIsValid = true;
@@ -226,9 +224,11 @@ class ContactData extends Component {
         >ORDER</Button>        
       </form>
     );
-    if (this.state.loading) {
+
+    if (this.props.loading) {
       form = <Spinner />;
     }
+
     return (
       <div className={classes.ContactData}>
         <h4>Enter your Contact Data</h4>
@@ -241,9 +241,23 @@ class ContactData extends Component {
 // l.270. Adjusting checkout and contact data
 const mapStateToProps = state => {
   return {
-    ings: state.ingredients,
-    price: state.totalPrice
+    // l.302 De 'slices' (burg.B & order) namen zijn gedefinieerd in de root index.js file
+    ings: state.burgerBuilder.ingredients,
+    price: state.burgerBuilder.totalPrice,
+    loading: state.order.loading,
+    token: state.auth.token,
+    // l. 330 Displaying user specific orders
+    userId: state.auth.userId
   }
 }
 
-export default connect(mapStateToProps)(ContactData);
+// l. 298. HIER GAAT IETS MIS, IK WEET NIET WAT????? PRECIES HETZELFDE ALS VIDEO 298
+
+const mapDispatchToProps = dispatch => {
+  return {
+    // l. 321. Auth: second argument 'token' toegevoegd
+    onOrderBurger: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));

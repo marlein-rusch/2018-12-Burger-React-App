@@ -53,3 +53,16 @@ Note that I have coded along with the instructions: it is a pure copy of the 'Bu
 - Decide whether to use the local state or Redux state
 - Use mapStateToProps and mapDispatchToProps
 
+### Section 17 - Redux advanced
+- Handle async code with action creators
+- Apply middleware (thunk)
+- Refactor reducers
+
+### Section 18 - Authentication
+- Get a token from the backend (Firebase)
+- How to store the token 
+- Log users in and out
+- Map orders to a given user
+- Redirect the user when he visits unauthorized pages (guarded routes)
+- Redirect the user to a log-in form after creating a burger according to log-in (authorization) status
+- Use Local Storage to keep user logged in

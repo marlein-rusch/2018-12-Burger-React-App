@@ -12,7 +12,10 @@ const toolbar = (props) => (
       <Logo/>
     </div>
     <nav className={classes.DesktopOnly}>
-      <NavigationItems/>
+    {/* l. 322. isAutenthicated: Updating UI depending on Auth stat
+    props.isAuth wordt doorgegeven door Layout.js, waar het weer uit Redux wordt gehaald.
+    */}
+      <NavigationItems isAuthenticated={props.isAuth}/>
     </nav>
   </header>
 );

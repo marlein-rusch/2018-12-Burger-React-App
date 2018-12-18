@@ -7,10 +7,10 @@ import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import axios from '../../axios-orders';
 // lowercase cause we're not using it with JSX, but at the end at export
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import axios from '../../axios-orders';
-import * as actionTypes from '../../store/actions';
+import * as actions from '../../store/actions/index'; // index kan je omitten
 
 // const you want to use globally are often capitalized by convention
 
@@ -26,22 +26,19 @@ class BurgerBuilder extends Component{
 
   state = {
     // l.269:  ingredients, totalPrice en purchasable gaan nu via Redux 
-    purchasing: false,
-    loading: false,
-    error: false
+    purchasing: false
+    // loading: false, // gedelete in l. 294 vanwege axios request in redux
+    // error: false // gedelete in l. 294 vanwege axios request in redux
   }
 
   //l.175 retrieving data from the backend.
   // l. 266 WE'LL DO THIS LATER AGAIN IN REDUX STYLE
-  // componentDidMount(){
-  //   axios.get('https://react-marleins-burger.firebaseio.com/ingredients.json')
-  //     .then(response => {
-  //       this.setState({ingredients: response.data})
-  //     })
-  //     .catch(error => {
-  //       this.setState({error: true})
-  //     })
-  // }
+  // l. 293. Moving async code into the redux world.
+  componentDidMount(){
+    // l. 294. De async axios code hier uit ge-cut, en naar de redux actions
+    // l 295:
+    this.props.onInitIngredients();
+  }
 
   // Argument is nodig om de ge-update ingredients te krijgen in add&removedIngredientHandlers
   updatePurchaseState (ingredients) {
@@ -60,8 +57,15 @@ class BurgerBuilder extends Component{
   }
 
   // Note that the arrow syntax is necessary, otherwise the this refers to the wrong thing (ofzo)
+  // l.324. Forwarding unauthenticated users (PurchaseHandler uitgebreid)
   purchaseHandler = () => {
+    if (this.props.isAuthenticated){
     this.setState({purchasing: true});
+    } else {
+      // l. 325. 
+      this.props.onSetAuthRedirectPath('/checkout');
+      this.props.history.push('/auth');
+    }
   }
 
   purchaseCancelHandler = () => {
@@ -69,6 +73,8 @@ class BurgerBuilder extends Component{
   }
 
   purchaseContinueHandler = () => {
+    // l. 303. Redirecting to homepage na purchase (best ingewikkeld)
+    this.props.onInitPurchase();
     // l. 270. Is nu veel korter door Redux. Geen query params meer.
     this.props.history.push('/checkout');
   }
@@ -86,15 +92,16 @@ class BurgerBuilder extends Component{
 
     let orderSummary = null;
  
-    // l.175. Spinner opzet zolang we ingredients van database nog niet hebben
-    let burger = this.state.error ? <p>Ingredients can't be loaded!</p>: <Spinner />
+    // l. 175. Spinner opzet zolang we ingredients van database nog niet hebben
+    // l. 295: error prop nu in Redux, niet meer in local state, dus this.props.error ipv this.state.error
+    let burger = this.props.error ? <p>Ingredients can't be loaded!</p>: <Spinner />
     
     if (this.props.ings) {
       burger = (
         <Aux>
           <Burger ingredients={this.props.ings}/>
           <BuildControls
-          // Here we bind properties (that we name ourselves) to the state
+            // Here we bind properties (that we name ourselves) to the state
             ingredientAdded={this.props.onIngredientAdded}
             ingredientRemoved={this.props.onIngredientRemoved}
             disabled={disabledInfo}
@@ -102,6 +109,8 @@ class BurgerBuilder extends Component{
             // l. 269. Method aangepast to enable/disable order button
             purchasable={this.updatePurchaseState(this.props.ings)}
             ordered={this.purchaseHandler}
+            // l. 324 Forwarding unauthenticated users
+            isAuth={this.props.isAuthenticated}
           />
         </Aux>
       );
@@ -114,9 +123,9 @@ class BurgerBuilder extends Component{
       />
     }  
 
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
+    // if (this.state.loading) {
+    //   orderSummary = <Spinner />;
+    // } // gedelete in l. 294
 
     return (
       <Aux>
@@ -134,15 +143,27 @@ class BurgerBuilder extends Component{
 
 const mapStateToProps = state => {
   return {
-    ings: state.ingredients,
-    price: state.totalPrice
+    // l. 302. Combined reducers, dus nu .burgerBuilder toegevoegd (to reach that 'slice' of the combined reducer)
+    ings: state.burgerBuilder.ingredients,
+    price: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error,
+    // l. 324 Forwarding unauthenticated users
+    isAuthenticated: state.auth.token !== null
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onIngredientAdded: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
-    onIngredientRemoved: (ingName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingName})
+    // L 292. Opzet action creators. De originele line (hieronder) vervangen.
+    // onIngredientAdded: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
+    // Hier hebben we een argument (ingName). Soms is dat niet zo, nl als er geen payload is.
+    onIngredientAdded: (ingName) => dispatch(actions.addIngredient(ingName)),
+    onIngredientRemoved: (ingName) => dispatch(actions.removeIngredient(ingName)),
+    // l. 295. Move axios request naar Redux.
+    onInitIngredients: () => dispatch(actions.initIngredients()),
+    onInitPurchase: () => dispatch(actions.purchaseInit()),
+    // l. 325 Redirecting the user to the Checkout page.
+    onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
   }
 }
 

@@ -21,7 +21,8 @@ const sideDrawer = (props) => {
     <Aux>
       {/* boolean value dus show = true */}
       <Backdrop show={props.open} clicked={props.closed}/>
-      <div className={attachedClasses.join(' ')}>
+      {/* l. 334. onClick: Klik de sidedrawer weg als je ergens klik */}
+      <div className={attachedClasses.join(' ')} onClick={props.closed}>
         <div className={classes.Logo}>
           <Logo/>
         </div>

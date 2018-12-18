@@ -9,6 +9,11 @@ import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import classes from './Auth.css';
 import * as actions from '../../store/actions/index';
+   // l. 335: REFACTORING: Use the 'updateObject' function.
+    // HEB IK NIET GEIMPLEMENTEERD!! (Maar handig voor reference)
+// import { updateObject } from '../../shared/utility';
+import { checkValidity } from '../../shared/utility';
+
 
 class Auth extends Component {
 
@@ -57,25 +62,7 @@ class Auth extends Component {
     }
   }
 
-  checkValidity(value, rules) {
-    // l.234. Omdraaien logica: eerst isValid op true, en naar false zetten naargelang condities.
-    let isValid = true;
-
-    if (rules.required) {
-      // trim = remove whitespace at beginning and end
-      isValid = value.trim() !== '' && isValid;
-    }
-    // die &&isValid is een beetje een trick
-    // .. zodat all rules need to resolve to true
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-    return isValid;
-  }
+    // CHECK VAL WEGGEHAALD
 
   inputChangedHandler = (event, controlName) => {
     const updatedControls = {
@@ -83,7 +70,9 @@ class Auth extends Component {
       [controlName]: {
         ...this.state.controls[controlName],
         value: event.target.value,
-        valid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
+        // l. 336. Validation method in 'shared' file.
+        // this.checkValidity vervangne door checkvalidity.. supermakkelijk!
+        valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
         touched: true
       }
     };

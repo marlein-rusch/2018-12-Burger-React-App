@@ -9,6 +9,11 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
+   // l. 335: REFACTORING: Use the 'updateObject' function.
+    // HEB IK NIET GEIMPLMENTEERD!! (Maar handig voor reference)
+// import { updateObject } from '../../../shared/utility';
+// l. 337: Handig! Vrij makkelijk te implementeren, zie utility file voor notes
+import { checkValidity} from '../../../shared/utility';
 
 class ContactData extends Component {
   // l.228 (omzetting naar dit object) 
@@ -132,31 +137,11 @@ class ContactData extends Component {
     this.props.onOrderBurger(order, this.props.token);
   }
 
-  // l.233 Custom Form Validation (pretty cool)
-  checkValidity(value, rules) {
-    // l.234. Omdraaien logica: eerst isValid op true, en naar false zetten naargelang condities.
-    let isValid = true;
-
-    if (rules.required) {
-      // trim = remove whitespace at beginning and end
-      isValid = value.trim() !== '' && isValid;
-    }
-    // die &&isValid is een beetje een trick
-    // .. zodat all rules need to resolve to true
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-    return isValid;
-  }
-
-
   // l.231 Handling User Input. 
   // Namelijk: als je typt, dan wordt dit in de input fields gevisualiseerd
   inputChangedHandler = (event, inputIdentifier) => {
+    // l. 335: REFACTORING: Use the 'updateObject' function.
+    // HEB IK NIET GEIMPLMENTEERD!! (Maar handig voor reference)
     // l.231 Inmutably updating any effective form elements.
     // We need 2x the spread operator, to ensure
     // .. an actual deep copy of the nested objects.
@@ -170,7 +155,7 @@ class ContactData extends Component {
     };
     // Nested value aanpassen..
     updatedFormElement.value = event.target.value
-    updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation) // l. 233
+    updatedFormElement.valid = checkValidity(updatedFormElement.value, updatedFormElement.validation) // l. 233
       // (l.236)
     updatedFormElement.touched = true
     // .. met de aangepaste nested value het hele object aanpassen..

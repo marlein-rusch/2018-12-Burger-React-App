@@ -72,3 +72,7 @@ Note that I have coded along with the instructions: it is a pure copy of the 'Bu
 - Use the test Runner **Jest** (e.g. applying the *expect()* method)
 - Use the test utility **Enzyme** to simulate mounting react app components and dig into the DOM (e.g. applying the *.find()* and *.contains()* method)
 - Do some simple unit testing with methods like *.toEqual* and *.toHaveLength*
+
+### Section 21 - Deploying (to Firebase)
+
+- Deployed app: https://react-marleins-burger.firebaseapp.com

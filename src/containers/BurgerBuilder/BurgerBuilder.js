@@ -59,10 +59,10 @@ class BurgerBuilder extends Component{
   // Note that the arrow syntax is necessary, otherwise the this refers to the wrong thing (ofzo)
   // l.324. Forwarding unauthenticated users (PurchaseHandler uitgebreid)
   purchaseHandler = () => {
-    if (this.props.isAuth){
+    if (this.props.isAuthenticated){
     this.setState({purchasing: true});
     } else {
-      // l. 325. MAAR WERKT NIET
+      // l. 325. 
       this.props.onSetAuthRedirectPath('/checkout');
       this.props.history.push('/auth');
     }
@@ -162,7 +162,7 @@ const mapDispatchToProps = dispatch => {
     // l. 295. Move axios request naar Redux.
     onInitIngredients: () => dispatch(actions.initIngredients()),
     onInitPurchase: () => dispatch(actions.purchaseInit()),
-    // l. 325 Redirecting the user to the Checkout page. MAAR WERKT NIET
+    // l. 325 Redirecting the user to the Checkout page.
     onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
   }
 }

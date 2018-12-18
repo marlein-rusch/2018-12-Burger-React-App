@@ -122,7 +122,9 @@ class ContactData extends Component {
       ingredients: this.props.ings,
       // In real-world set-up this would not be safe: you'd recalculate the price on the server
       price: this.props.price,
-      orderData: formData
+      orderData: formData,
+      // l. 330 Displaying user specific orders
+      userId: this.props.userId
     }
     // l. 297: AXIOS-code ge-cut naar order.js action file (voor Redux)
     // l. 298: Replaced by the following (we receive our dispatch actions via this.props)
@@ -243,7 +245,9 @@ const mapStateToProps = state => {
     ings: state.burgerBuilder.ingredients,
     price: state.burgerBuilder.totalPrice,
     loading: state.order.loading,
-    token: state.auth.token
+    token: state.auth.token,
+    // l. 330 Displaying user specific orders
+    userId: state.auth.userId
   }
 }
 

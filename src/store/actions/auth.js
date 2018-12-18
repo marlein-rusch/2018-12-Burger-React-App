@@ -41,7 +41,7 @@ export const checkAuthTimeout = (expirationTime) => {
       // Always execute these functions, because that then
       // (..) the action that is actually dispatched.
       dispatch(logout())
-    }, expirationTime * 100);
+    }, expirationTime * 1000);
   }
 }
 
@@ -98,7 +98,7 @@ export const setAuthRedirectPath = (path) => {
 
 // l. 326. Local Storage
 // Utility action creator which dispatches a couple of other 
-// .. actions depending on our curren state. It's not async.
+// .. actions depending on our current state. It's not async.
 
 export const authCheckState = () => {
   return dispatch => {

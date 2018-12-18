@@ -84,12 +84,17 @@ export const fetchOrdersStart = () => {
 }
 
 // l. 321 token argument toegevoegd voor authentication
-export const fetchOrders = (token) => {
+export const fetchOrders = (token, userId) => {
   return dispatch => {
     // l. 305. Deze ..Start() dispatch is om de spinner te laten zien
     dispatch(fetchOrdersStart())
+    // l. 330 Displaying User Specific orders
+      // orderBy is a query param understood by firebase. So that depends on your backend.
+      // It tells firebase to filter by the token
+      // equalTo refers to the key you are ordering by
+    const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
     // l. 321 Authentication: add token as query param to have access to orderlist
-    axios.get('/orders.json?auth=' + token)
+    axios.get('/orders.json' + queryParams)
     // l.305. Deze transformation kan ook in de reducer, Max prefers in action creator
     .then(res => {
       const fetchedOrders = [];

@@ -13,7 +13,7 @@ class Orders extends Component {
   componentDidMount() {
     // l. 305. Axios code deleted (moved to actions, so Redux)
     // l. 321. Adding authentication: this.props.token als argument toegevoegd
-    this.props.onFetchOrders(this.props.token);
+    this.props.onFetchOrders(this.props.token, this.props.userId);
 
   }
   
@@ -42,14 +42,16 @@ const mapStateToProps = state => {
     orders: state.order.orders,
     loading: state.order.loading,
     // l. 321. Taken token from Redux store for authentication
-    token: state.auth.token
+    token: state.auth.token,
+    // l. 330. Displaying user Specific Orders (userId nodig voor queryparams)
+    userId: state.auth.userId
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     // l. 321 token als argument toegevoegd voor Authentication
-    onFetchOrders: (token) => dispatch(actions.fetchOrders(token))
+    onFetchOrders: (token, userId) => dispatch(actions.fetchOrders(token, userId))
   };
 };
 

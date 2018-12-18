@@ -14,8 +14,11 @@ import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
 
 // l.293: Adding Middleware, nu moet je advanced set up gebruiken (1e of 2e hit zoekterm 'redux Devtools' via Google)
+// l. 337. Using Environment variables. In production mode de store uitzetten: zie terniry expression hieronder
+// In Config --> env.js file zie je dat NODE_ENV = 'development'. Is automatically set. 
+// NODE_ENV is accessible via the global variable process (hoef je niet te setten).
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 
 // l.302. Combine reducers.
 const rootReducer = combineReducers ({

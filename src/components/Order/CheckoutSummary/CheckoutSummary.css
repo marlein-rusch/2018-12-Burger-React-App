@@ -4,9 +4,3 @@
   /* center the element, the div */
   margin: auto;
 }
-
-@media(min-width: 600px) {
-  .CheckoutSummary {
-    width: 500px;
-  }
-}

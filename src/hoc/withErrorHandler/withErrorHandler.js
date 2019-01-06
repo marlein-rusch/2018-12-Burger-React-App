@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import Modal from '../../components/UI/Modal/Modal';
-import Aux from '../Aux/Aux';
+import Aux from '../Wrap/Wrap';
 
 // l. 174 voor creatie reuasable hoc 'withErrorHandler'
 // We can wrap it around any component that uses axios to handle its errors

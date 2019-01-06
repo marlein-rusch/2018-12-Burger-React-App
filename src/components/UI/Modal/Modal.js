@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import classes from './Modal.css';
 import Backdrop from '../Backdrop/Backdrop';
-import Aux from '../../../hoc/Aux/Aux';
+import Aux from '../../../hoc/Wrap/Wrap';
 
 class Modal extends Component {
   // l. 145 (shouldCompUpdate en omzetting naar class)

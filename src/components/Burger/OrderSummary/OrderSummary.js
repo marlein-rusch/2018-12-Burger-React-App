@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import Aux from '../../../hoc/Aux/Aux';
+import Aux from '../../../hoc/Wrap/Wrap';
 import Button from '../../UI/Button/Button';
 
 // This could be a funtional component (hadden we om iets te laten zien even omgezet en niet terug omgezet)
